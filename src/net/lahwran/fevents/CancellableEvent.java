@@ -5,9 +5,9 @@ package net.lahwran.fevents;
 
 /**
  * @author lahwran
- * @param <T> Event type
+ * @param <TEvent> Event type
  */
-public abstract class CancellableEvent<T extends CancellableEvent<T>> extends Event<T> {
+public abstract class CancellableEvent<TEvent extends CancellableEvent<TEvent>> extends Event<TEvent> {
 
     /**
      * Whether this event has been cancelled.

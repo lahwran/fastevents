@@ -12,14 +12,14 @@ public class EventManager {
     /**
      * Call an event.
      * 
-     * @param <EventType> Event subclass
+     * @param <TEvent> Event subclass
      * @param event Event to handle
      */
-    public <EventType extends Event<EventType>> void callEvent(EventType event) {
-        HandlerList<EventType> handlerlist = event.getHandlers();
+    public <TEvent extends Event<TEvent>> void callEvent(TEvent event) {
+        HandlerList<TEvent> handlerlist = event.getHandlers();
         handlerlist.bake();
 
-        Listener<EventType>[][] handlers = handlerlist.handlers;
+        Listener<TEvent>[][] handlers = handlerlist.handlers;
         int[] handlerids = handlerlist.handlerids;
 
         for (int arrayidx=0; arrayidx<handlers.length; arrayidx++) {
@@ -29,7 +29,7 @@ public class EventManager {
                 continue; // then don't call this order slot
 
             for (int handler = 0; handler < handlers[arrayidx].length; handler++) {
-                Listener<EventType> listener = handlers[arrayidx][handler];
+                Listener<TEvent> listener = handlers[arrayidx][handler];
                 try {
                     event.call(listener);
                 } catch (Throwable t) {

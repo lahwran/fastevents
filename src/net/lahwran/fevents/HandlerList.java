@@ -9,17 +9,17 @@ import java.util.Map.Entry;
 
 /**
  * @author lahwran
- * @param <EventType> Event type
+ * @param <TEvent> Event type
  *
  */
 @SuppressWarnings("unchecked")
-public class HandlerList<EventType extends Event<EventType>> {
+public class HandlerList<TEvent extends Event<TEvent>> {
     /**
      * handler array. this field being an array is the key to this system's speed.
      * 
      * is initialized in bake().
      */
-    Listener<EventType>[][] handlers;
+    Listener<TEvent>[][] handlers;
 
     /**
      * Int array same length as handlers. each value in this array is the index
@@ -34,7 +34,7 @@ public class HandlerList<EventType extends Event<EventType>> {
      * unregister() and are automatically baked to the handlers array any
      * time they have changed.
      */
-    private final EnumMap<Order, ArrayList<Listener<EventType>>> handlerslots;
+    private final EnumMap<Order, ArrayList<Listener<TEvent>>> handlerslots;
 
     /**
      * Whether the current handlerslist has been fully baked. When this is set
@@ -66,9 +66,9 @@ public class HandlerList<EventType extends Event<EventType>> {
      * handlerlist is then added to meta-list for use in bakeall()
      */
     public HandlerList() {
-        handlerslots = new EnumMap<Order, ArrayList<Listener<EventType>>>(Order.class);
+        handlerslots = new EnumMap<Order, ArrayList<Listener<TEvent>>>(Order.class);
         for (Order o : Order.values()) {
-            handlerslots.put(o, new ArrayList<Listener<EventType>>());
+            handlerslots.put(o, new ArrayList<Listener<TEvent>>());
         }
         alllists.add(this);
     }
@@ -78,7 +78,7 @@ public class HandlerList<EventType extends Event<EventType>> {
      * @param listener listener to register
      * @param order order location at which to call provided listener
      */
-    public void register(Listener<EventType> listener, Order order) {
+    public void register(Listener<TEvent> listener, Order order) {
         if (handlerslots.get(order).contains(listener))
             throw new IllegalStateException("This listener is already registered to order "+order.toString());
         baked = false;
@@ -89,7 +89,7 @@ public class HandlerList<EventType extends Event<EventType>> {
      * Remove a listener from all order slots
      * @param listener listener to purge
      */
-    public void unregister(Listener<EventType> listener) {
+    public void unregister(Listener<TEvent> listener) {
         for (Order o : Order.values()) {
             unregister(listener, o);
         }
@@ -100,7 +100,7 @@ public class HandlerList<EventType extends Event<EventType>> {
      * @param listener listener to remove
      * @param order order from which to remove listener
      */
-    public void unregister(Listener<EventType> listener, Order order) {
+    public void unregister(Listener<TEvent> listener, Order order) {
         if (handlerslots.get(order).contains(listener)) {
             baked = false;
             handlerslots.get(order).remove(listener);
@@ -116,10 +116,10 @@ public class HandlerList<EventType extends Event<EventType>> {
 
         ArrayList<Listener[]> handlerslist = new ArrayList<Listener[]>();
         ArrayList<Integer> handleridslist = new ArrayList<Integer>();
-        for (Entry<Order, ArrayList<Listener<EventType>>> entry : handlerslots.entrySet()) {
+        for (Entry<Order, ArrayList<Listener<TEvent>>> entry : handlerslots.entrySet()) {
             Order orderslot = entry.getKey();
 
-            ArrayList<Listener<EventType>> list = entry.getValue();
+            ArrayList<Listener<TEvent>> list = entry.getValue();
 
             int ord = orderslot.getIndex();
             handlerslist.add(list.toArray(new Listener[list.size()]));

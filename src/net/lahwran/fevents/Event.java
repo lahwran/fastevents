@@ -20,23 +20,23 @@ package net.lahwran.fevents;
  *     }
  * </pre>
  * @author lahwran
- * @param <T> Event class
+ * @param <TEvent> Event class
  *
  */
-public abstract class Event<T extends Event<T>> {
+public abstract class Event<TEvent extends Event<TEvent>> {
     /**
      * Get the static handler list of this event subclass.
      * 
      * @return HandlerList to call event with
      */
-    protected abstract HandlerList<T> getHandlers();
+    protected abstract HandlerList<TEvent> getHandlers();
 
     /**
      * Call a listener for this event. Workaround for type erasure.
      * 
      * @param listener listener to call
      */
-    protected abstract void call(Listener<T> listener);
+    protected abstract void call(Listener<TEvent> listener);
 
     /**
      * Get event type name.

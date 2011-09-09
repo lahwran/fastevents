@@ -13,17 +13,27 @@ import net.lahwran.fevents.Order;
  */
 public class TestMain {
 
+    /**
+     * 
+     * @param message message
+     */
     static void log(String message) {
         System.out.println("["+System.currentTimeMillis()+"] "+message);
     }
 
+    /**
+     * 
+     * @param value value
+     * @param assertion assertion
+     * @throws TestException TestException
+     */
     static void exAssert(boolean value, String assertion) throws TestException {
         log("Assert: "+assertion+(value ? "" : " - ASSERTION FAILED"));
         if (!value)
             throw new TestException("Assertion "+assertion+" FAILED");
     }
     
-    public static void tests_simple(EventManager eventmanager) throws TestException {
+    private  static void tests_simple(EventManager eventmanager) throws TestException {
         log("---- entering tests_simple");
         SingletonTestEvent testevent = SingletonTestEvent.update("Test event");
         exAssert(testevent.getMessage().equals("Test event"), "testevent.getMessage().equals(\"Test event\")");
@@ -59,12 +69,14 @@ public class TestMain {
         }
     }
 
-    public static void test_speed(EventManager eventmanager) throws TestException {
+    private  static void test_speed(EventManager eventmanager) {
         log("---- entering test_speed");
         SingletonTestEvent testevent = SingletonTestEvent.update("speed test");
 
         Listener<SingletonTestEvent> speedy = new Listener<SingletonTestEvent>() {
-            public void onEvent(SingletonTestEvent event) {}
+            public void onEvent(SingletonTestEvent event) {
+                //Noop to test speed of event-calling system
+            }
         };
 
         SingletonTestEvent.handlers.register(speedy, Order.Default);
@@ -83,7 +95,7 @@ public class TestMain {
         log("---- exiting test_speed");
     }
 
-    public static void tests_order(EventManager eventmanager) throws TestException {
+    private  static void tests_order(EventManager eventmanager) throws TestException {
         log("---- entering test_order");
         SimpleTestEvent testevent = new SimpleTestEvent(0);
         
@@ -144,6 +156,33 @@ public class TestMain {
         }
     }
 
+    public static void test_cancellation(EventManager eventmanager) {
+        log("---- entering test_cancellation");
+        TestCancellableEvent event = new TestCancellableEvent();
+        EventCancellerListener canceller = new EventCancellerListener();
+        log("registering canceller");
+        TestCancellableEvent.handlers.register(canceller, Order.Earlist);
+        log("registering listeners");
+        TestCancellableEvent.handlers.register(new EventStatusListener("Earliest"), Order.Earlist);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Early_IgnoreCancelled"), Order.Early_IgnoreCancelled);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Early"), Order.Early);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Default_IgnoreCancelled"), Order.Default_IgnoreCancelled);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Default"), Order.Default);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Late_IgnoreCancelled"), Order.Late_IgnoreCancelled);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Late"), Order.Late);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Latest_IgnoreCancelled"), Order.Latest_IgnoreCancelled);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Latest"), Order.Latest);
+        TestCancellableEvent.handlers.register(new EventStatusListener("Monitor"), Order.Monitor);
+        log("calling event");
+        eventmanager.callEvent(event);
+        log("unregistering canceller");
+        TestCancellableEvent.handlers.unregister(canceller, Order.Earlist);
+        log("calling event again");
+        event = new TestCancellableEvent();
+        eventmanager.callEvent(event);
+        log("---- existing test_cancellation");
+    }
+
     /**
      * Test main - call to run tests (including 10-billion-call speed test)<br>
      * <br>
@@ -172,6 +211,9 @@ public class TestMain {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+        
+        test_cancellation(eventmanager);
+        
         try {
             test_speed(eventmanager);
         } catch (Throwable e) {

@@ -5,12 +5,12 @@ package net.lahwran.fevents;
 
 /**
  * @author lahwran
- * @param <EventType> Event type
+ * @param <TEvent> Event type
  */
-public interface Listener<EventType extends Event<EventType>> {
+public interface Listener<TEvent extends Event<TEvent>> {
     /**
      * Handle an event
      * @param event Event to handle
      */
-    public void onEvent(EventType event);
+    public void onEvent(TEvent event);
 }
