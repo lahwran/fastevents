@@ -1,10 +1,9 @@
 /**
  * 
  */
-package net.lahwran;
+package net.lahwran.fevents.test;
 
 import net.lahwran.fevents.Listener;
-import net.lahwran.fevents.test.SimpleTestEvent;
 
 /**
  * @author lahwran

@@ -1,7 +1,11 @@
 /**
  * 
  */
-package net.lahwran.fevents;
+package net.lahwran.fevents.test;
+
+import net.lahwran.fevents.Event;
+import net.lahwran.fevents.HandlerList;
+import net.lahwran.fevents.Listener;
 
 /**
  * @author lahwran
@@ -56,5 +60,10 @@ public class SingletonTestEvent extends Event<SingletonTestEvent> {
     @Override
     protected void call(Listener<SingletonTestEvent> listener) {
         listener.onEvent(this);
+    }
+
+    @Override
+    protected String getEventName() {
+        return "Singleton Test Event";
     }
 }

@@ -52,4 +52,9 @@ public class SimpleTestEvent extends Event<SimpleTestEvent> {
     protected void call(Listener<SimpleTestEvent> listener) {
         listener.onEvent(this);
     }
+
+    @Override
+    protected String getEventName() {
+        return "Simple Test Event";
+    }
 }

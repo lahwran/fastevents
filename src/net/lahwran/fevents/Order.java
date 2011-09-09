@@ -1,7 +1,13 @@
 package net.lahwran.fevents;
 
 /**
- * Order of event listener calls
+ * Order of event listener calls.
+ * 
+ * Odd-numbered slots are called even when
+ * events are marked "not propogating". If an event stops propogating partway
+ * through an even slot, that slot will not cease execution, but future even
+ * slots will not be called.
+ * 
  * @author lahwran
  */
 public enum Order {
@@ -36,13 +42,13 @@ public enum Order {
     Default(4),
 
     /**
-     * Called after "Early" handlers and before "Default" handlers. Is called
-     * even when event has been canceled. This is for general-purpose
-     * always-run events.
+     * Called after "Default" handlers and before "Late" handlers. Is called
+     * even when event has been canceled.
      */
     Late_IgnoreCancelled(5),
+
     /**
-     * 
+     * Called after "Default" handlers. 
      */
     Late(6),
 

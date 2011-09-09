@@ -18,10 +18,31 @@ public class HandlerList<EventType extends Event<EventType>> {
      * handler array. this field being an array is the key to this system's speed
      */
     final Listener<EventType>[][] handlers = new Listener[Order.values().length][];
-    private final EnumMap<Order, ArrayList<Listener<EventType>>> handlerslist; 
-    private boolean baked = false;
-    private final EnumMap<Order, Boolean> bakedlist;
 
+    /**
+     * Dynamic handler lists. These are changed using register() and
+     * unregister() and are automatically baked to the handlers array any
+     * time they have changed.
+     */
+    private final EnumMap<Order, ArrayList<Listener<EventType>>> handlerslots;
+
+    /**
+     * Whether the current handlerslist has been fully baked. When this is set
+     * to false, bakedslots will be searched for unbaked order slots next time
+     * the event is called.
+     * @see EventManager.callEvent
+     */
+    private boolean baked = false;
+
+    /**
+     * Tracks Order slots which have been baked. If a false is set in this map,
+     * that order slot will be rebaked.
+     */
+    private final EnumMap<Order, Boolean> bakedslots;
+
+    /**
+     * List of all handlerlists which have been created, for use in bakeall()
+     */
     private static ArrayList<HandlerList> alllists = new ArrayList<HandlerList>();
 
     /**
@@ -40,11 +61,11 @@ public class HandlerList<EventType extends Event<EventType>> {
      * handlerlist is then added to meta-list for use in bakeall()
      */
     public HandlerList() {
-        handlerslist = new EnumMap<Order, ArrayList<Listener<EventType>>>(Order.class);
-        bakedlist = new EnumMap<Order, Boolean>(Order.class);
+        handlerslots = new EnumMap<Order, ArrayList<Listener<EventType>>>(Order.class);
+        bakedslots = new EnumMap<Order, Boolean>(Order.class);
         for (Order o : Order.values()) {
-            handlerslist.put(o, new ArrayList<Listener<EventType>>());
-            bakedlist.put(o, false);
+            handlerslots.put(o, new ArrayList<Listener<EventType>>());
+            bakedslots.put(o, false);
         }
         alllists.add(this);
     }
@@ -55,11 +76,11 @@ public class HandlerList<EventType extends Event<EventType>> {
      * @param order order location at which to call provided listener
      */
     public void register(Listener<EventType> listener, Order order) {
-        if (handlerslist.get(order).contains(listener))
+        if (handlerslots.get(order).contains(listener))
             throw new IllegalStateException("This listener is already registered to order "+order.toString());
         baked = false;
-        bakedlist.put(order, false);
-        handlerslist.get(order).add(listener);
+        bakedslots.put(order, false);
+        handlerslots.get(order).add(listener);
     }
 
     /**
@@ -78,10 +99,10 @@ public class HandlerList<EventType extends Event<EventType>> {
      * @param order order from which to remove listener
      */
     public void unregister(Listener<EventType> listener, Order order) {
-        if (handlerslist.get(order).contains(listener)) {
+        if (handlerslots.get(order).contains(listener)) {
             baked = false;
-            bakedlist.put(order, false);
-            handlerslist.get(order).remove(listener);
+            bakedslots.put(order, false);
+            handlerslots.get(order).remove(listener);
         }
     }
 
@@ -91,12 +112,18 @@ public class HandlerList<EventType extends Event<EventType>> {
     void bake() {
         if (baked)
             return; // don't re-bake when still valid
-        for (Entry<Order, ArrayList<Listener<EventType>>> entry : handlerslist.entrySet()) {
-            if (bakedlist.get(entry.getKey()))
+
+        for (Entry<Order, ArrayList<Listener<EventType>>> entry : handlerslots.entrySet()) {
+            Order orderslot = entry.getKey();
+            if (bakedslots.get(orderslot))
                 continue; // don't re-bake individual order slots, either
-            int ord = entry.getKey().getIndex();
-            handlers[ord] = entry.getValue().toArray(new Listener[entry.getValue().size()]);
-            bakedlist.put(entry.getKey(), true);
+
+            ArrayList<Listener<EventType>> list = entry.getValue();
+
+            int ord = orderslot.getIndex();
+            handlers[ord] = list.toArray(new Listener[list.size()]);
+
+            bakedslots.put(orderslot, true); // mark this order slot as baked
         }
         baked = true;
     }
