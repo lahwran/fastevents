@@ -24,6 +24,13 @@ package net.lahwran.fevents;
  *
  */
 public abstract class Event<TEvent extends Event<TEvent>> {
+
+    /**
+     * Stores cancelled status. will be false unless a subclass publishes
+     * setCancelled.
+     */
+    protected boolean cancelled = false;
+
     /**
      * Get the static handler list of this event subclass.
      * 
@@ -43,14 +50,27 @@ public abstract class Event<TEvent extends Event<TEvent>> {
     }
 
     /**
-     * Returning false will prevent calling any even Order slots. For use in
-     * cancelable events and such.
+     * Set cancelled status. Events which wish to be cancellable should
+     * implement Cancellable and implement setCancelled as:
+     * <pre>
+     *     public void setCancelled(boolean cancelled) {
+     *         super.setCancelled(cancelled);
+     *     }
+     * </pre>
+     * @param cancelled True to cancel event
+     */
+    protected void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    /**
+     * Returning true will prevent calling any even Order slots. 
      * 
      * @see Order
-     * @return true if the event is propogating; default implementation always
-     *             returns true.
+     * @return false if the event is propogating; events which do not implement
+     *                Cancellable should never return true here
      */
-    protected boolean isPropogating() {
-        return true;
+    public boolean isCancelled() {
+        return cancelled;
     }
 }

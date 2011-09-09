@@ -25,7 +25,7 @@ public class EventManager {
         for (int arrayidx=0; arrayidx<handlers.length; arrayidx++) {
 
             // if the order slot is even and the event has stopped propogating
-            if (!event.isPropogating() && (handlerids[arrayidx] & 1) == 0)
+            if (event.isCancelled() && (handlerids[arrayidx] & 1) == 0)
                 continue; // then don't call this order slot
 
             for (int handler = 0; handler < handlers[arrayidx].length; handler++) {

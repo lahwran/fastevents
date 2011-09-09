@@ -52,13 +52,30 @@ public enum Order {
      */
     Late(6),
 
+    /**
+     * Called after "Late" handlers and before "Latest" handlers. Is called
+     * even when event has been canceled.
+     */
     Latest_IgnoreCancelled(7),
+
+    /**
+     * Called after "Late" handlers.
+     */
     Latest(8),
+
+    /**
+     * Called after "Latest" handlers. No changes to the event should be made
+     * in this order slot (though it is not enforced). Is called even when
+     * event has been cancelled.
+     */
     Monitor(9);
+
     private int index;
+
     Order(int index) {
         this.index = index;
     }
+ 
     /**
      * @return the index
      */

@@ -3,7 +3,8 @@
  */
 package net.lahwran.fevents.test;
 
-import net.lahwran.fevents.CancellableEvent;
+import net.lahwran.fevents.Cancellable;
+import net.lahwran.fevents.Event;
 import net.lahwran.fevents.HandlerList;
 import net.lahwran.fevents.Listener;
 
@@ -11,7 +12,7 @@ import net.lahwran.fevents.Listener;
  * @author lahwran
  *
  */
-public class TestCancellableEvent extends CancellableEvent<TestCancellableEvent> {
+public class TestCancellableEvent extends Event<TestCancellableEvent> implements Cancellable {
 
 //    /* (non-Javadoc)
 //     * @see net.lahwran.fevents.Event#call(net.lahwran.fevents.Listener)
@@ -43,4 +44,7 @@ public class TestCancellableEvent extends CancellableEvent<TestCancellableEvent>
         return handlers;
     }
 
+    public void setCancelled(boolean cancelled) {
+        super.setCancelled(cancelled);
+    }
 }

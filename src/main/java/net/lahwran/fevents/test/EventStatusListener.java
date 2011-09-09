@@ -3,7 +3,6 @@
  */
 package net.lahwran.fevents.test;
 
-import net.lahwran.fevents.CancellableEvent;
 import net.lahwran.fevents.Listener;
 
 /**
