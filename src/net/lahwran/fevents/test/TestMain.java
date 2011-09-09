@@ -70,10 +70,8 @@ public class TestMain {
         SingletonTestEvent.handlers.register(speedy, Order.Default);
         
         long starttime = System.currentTimeMillis();
-        long itercount = 100000000L;
-        double predicted = 5.7195E-5;
+        long itercount = 1000000000L;
         log("Beginning speed test, "+itercount+" iterations");
-        log("Predicted time per event: "+predicted+"ms - Predicted process time: "+((itercount * predicted) / 1000.0)+" seconds");
         for (long i=0; i<itercount; i++) {
             eventmanager.callEvent(testevent);
         }
@@ -81,7 +79,7 @@ public class TestMain {
         long length = endtime - starttime;
         double perevent = (double)length / (double)itercount;
         log("End "+itercount+" iterations in "+(length / 1000.0)+" seconds: "+perevent+"ms per event");
-        log("Event calls per second: "+(itercount / (length / 1000.0)));
+        log("Event calls per second: "+(long)(itercount / (length / 1000.0)));
         log("---- exiting test_speed");
     }
 
@@ -166,17 +164,17 @@ public class TestMain {
         EventManager eventmanager = new EventManager();
         try {
             tests_simple(eventmanager);
-        } catch (TestException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         try {
             tests_order(eventmanager);
-        } catch (TestException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         try {
             test_speed(eventmanager);
-        } catch (TestException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         /*

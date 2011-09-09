@@ -20,15 +20,16 @@ public class EventManager {
         handlerlist.bake();
 
         Listener<EventType>[][] handlers = handlerlist.handlers;
+        int[] handlerids = handlerlist.handlerids;
 
-        for (int orderidx=0; orderidx<handlers.length; orderidx++) {
+        for (int arrayidx=0; arrayidx<handlers.length; arrayidx++) {
 
             // if the order slot is even and the event has stopped propogating
-            if ((orderidx & 1) == 0 && !event.isPropogating())
+            if (!event.isPropogating() && (handlerids[arrayidx] & 1) == 0)
                 continue; // then don't call this order slot
 
-            for (int handler = 0; handler < handlers[orderidx].length; handler++) {
-                Listener<EventType> listener = handlers[orderidx][handler];
+            for (int handler = 0; handler < handlers[arrayidx].length; handler++) {
+                Listener<EventType> listener = handlers[arrayidx][handler];
                 try {
                     event.call(listener);
                 } catch (Throwable t) {
