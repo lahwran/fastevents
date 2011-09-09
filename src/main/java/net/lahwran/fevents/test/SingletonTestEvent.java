@@ -57,10 +57,10 @@ public class SingletonTestEvent extends Event<SingletonTestEvent> {
         return handlers;
     }
 
-    @Override
-    protected void call(Listener<SingletonTestEvent> listener) {
-        listener.onEvent(this);
-    }
+//    @Override
+//    protected void call(Listener<SingletonTestEvent> listener) {
+//        listener.onEvent(this);
+//    }
 
     @Override
     protected String getEventName() {

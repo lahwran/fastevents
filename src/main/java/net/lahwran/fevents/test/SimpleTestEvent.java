@@ -48,10 +48,10 @@ public class SimpleTestEvent extends Event<SimpleTestEvent> {
         return handlers;
     }
 
-    @Override
-    protected void call(Listener<SimpleTestEvent> listener) {
-        listener.onEvent(this);
-    }
+    //@Override
+    //protected void call(Listener<SimpleTestEvent> listener) {
+    //    listener.onEvent(this);
+    //}
 
     @Override
     protected String getEventName() {

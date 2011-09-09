@@ -13,14 +13,14 @@ import net.lahwran.fevents.Listener;
  */
 public class TestCancellableEvent extends CancellableEvent<TestCancellableEvent> {
 
-    /* (non-Javadoc)
-     * @see net.lahwran.fevents.Event#call(net.lahwran.fevents.Listener)
-     */
-    @Override
-    protected void call(Listener<TestCancellableEvent> listener) {
-        // TODO Auto-generated method stub
-        listener.onEvent(this);
-    }
+//    /* (non-Javadoc)
+//     * @see net.lahwran.fevents.Event#call(net.lahwran.fevents.Listener)
+//     */
+//    @Override
+//    protected void call(Listener<TestCancellableEvent> listener) {
+//        // TODO Auto-generated method stub
+//        listener.onEvent(this);
+//    }
 
     /* (non-Javadoc)
      * @see net.lahwran.fevents.Event#getEventName()

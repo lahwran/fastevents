@@ -32,13 +32,6 @@ public abstract class Event<TEvent extends Event<TEvent>> {
     protected abstract HandlerList<TEvent> getHandlers();
 
     /**
-     * Call a listener for this event. Workaround for type erasure.
-     * 
-     * @param listener listener to call
-     */
-    protected abstract void call(Listener<TEvent> listener);
-
-    /**
      * Get event type name.
      * 
      * @return event name

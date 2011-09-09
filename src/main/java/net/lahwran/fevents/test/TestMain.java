@@ -82,7 +82,7 @@ public class TestMain {
         SingletonTestEvent.handlers.register(speedy, Order.Default);
         
         long starttime = System.currentTimeMillis();
-        long itercount = 1000000000L;
+        long itercount = 100000000L;
         log("Beginning speed test, "+itercount+" iterations");
         for (long i=0; i<itercount; i++) {
             eventmanager.callEvent(testevent);
@@ -201,6 +201,12 @@ public class TestMain {
      */
     public static void main(String[] args) {
         EventManager eventmanager = new EventManager();
+        
+        try {
+            test_speed(eventmanager);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
         try {
             tests_simple(eventmanager);
         } catch (Throwable e) {
@@ -213,12 +219,6 @@ public class TestMain {
         }
         
         test_cancellation(eventmanager);
-        
-        try {
-            test_speed(eventmanager);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
         /*
         
         

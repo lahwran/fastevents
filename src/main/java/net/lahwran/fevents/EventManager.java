@@ -29,9 +29,8 @@ public class EventManager {
                 continue; // then don't call this order slot
 
             for (int handler = 0; handler < handlers[arrayidx].length; handler++) {
-                Listener<TEvent> listener = handlers[arrayidx][handler];
                 try {
-                    event.call(listener);
+                    handlers[arrayidx][handler].onEvent(event);
                 } catch (Throwable t) {
                     System.err.println("Error while passing event "+event);
                     t.printStackTrace();
